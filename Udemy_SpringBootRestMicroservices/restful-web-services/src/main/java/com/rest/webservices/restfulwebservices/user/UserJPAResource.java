@@ -23,6 +23,9 @@ public class UserJPAResource {
 	@Autowired
 	private UserRepository repository;
 	
+	@Autowired
+	private PostRepository postRespository;
+	
 	@GetMapping("/jpa/users")
 	public List<User> retrieveAllUsers(){
 		return repository.findAll();
@@ -58,5 +61,17 @@ public class UserJPAResource {
 		if(!user.isPresent())
 		   throw new Exception("NO DATA Found");
 		return user.get().getPost();
+	}
+	
+	@PostMapping("/jpa/users/{id}/posts")
+	public ResponseEntity<Object> createPost(@PathVariable int id,@RequestBody Post post) throws Exception{
+		Optional<User> savedUser = repository.findById(id);
+		if(!savedUser.isPresent())
+			   throw new Exception("NO DATA Found");
+	   	User user = savedUser.get();
+	    post.setUser(user);
+	   	postRespository.save(post);
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{Id}").buildAndExpand(post.getId()).toUri();
+		return ResponseEntity.created(location).build();
 	}
 }
