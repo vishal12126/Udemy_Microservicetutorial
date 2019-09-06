@@ -19,9 +19,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 public class UserJPAResource {
-
-	@Autowired
-	private UserDaoService service;
 	
 	@Autowired
 	private UserRepository repository;
@@ -52,5 +49,14 @@ public class UserJPAResource {
 		
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{Id}").buildAndExpand(savedUser.getId()).toUri();
 		return ResponseEntity.created(location).build();
+	}
+	
+	//Retrieve all post for User ID
+	@GetMapping("/jpa/users/{id}/posts")
+	public List<Post> retrieveAllUsers(@PathVariable int id) throws Exception{
+		Optional<User> user = repository.findById(id);
+		if(!user.isPresent())
+		   throw new Exception("NO DATA Found");
+		return user.get().getPost();
 	}
 }
