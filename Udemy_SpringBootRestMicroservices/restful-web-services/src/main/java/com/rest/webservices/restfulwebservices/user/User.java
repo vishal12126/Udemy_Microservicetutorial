@@ -1,10 +1,12 @@
 package com.rest.webservices.restfulwebservices.user;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
 import io.swagger.annotations.ApiModel;
@@ -23,6 +25,11 @@ public class User {
 	@ApiModelProperty(notes="birth date should be in past")
 	private Date birthDate;
 	
+	@OneToMany(mappedBy="user")
+	private List<Post> post;
+	
+	public User(){};
+	
 	public User(Integer id, String name, Date birthDate) {
 		super();
 		this.id = id;
@@ -30,6 +37,15 @@ public class User {
 		this.birthDate = birthDate;
 	}
 	
+	
+	public List<Post> getPost() {
+		return post;
+	}
+
+	public void setPost(List<Post> post) {
+		this.post = post;
+	}
+
 	public Integer getId() {
 		return id;
 	}
